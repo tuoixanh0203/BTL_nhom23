@@ -1,0 +1,71 @@
+:root {
+    font-size: 16px;
+}
+
+/* body{
+    background-image: url('/image/background.png');
+    background-color: rgb(191, 176, 204);
+} */
+
+.container{
+    display: flex;
+    justify-content: space-around;
+    align-items: baseline;
+    margin-top: 150px;
+}
+
+#formNhap {
+    background:rgba(217, 205, 236, 0.5);
+    width: 25%;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.button{
+    width: 100%;
+    height: 40px;
+    border-radius: 4px;
+    background-color: #58257b;
+    color: white;
+    font-size: large;
+}
+
+.row input{
+    border: 2px solid rgb(187, 187, 187);
+    border-radius: 4px;
+    width: 98%;
+    height: 40px;
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-size: 5rem;
+    font-family: Arial, Helvetica, sans-serif;
+    color: blueviolet;
+    text-shadow: 5px 5px 10px white;
+    text-align: center;
+}
+
+h3 {
+    font-size: 2rem;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    color: blueviolet;
+}
+
+@media (max-width:600px) {
+    :root {
+        font-size: 14px;
+    }
+    .container {
+        display: block;
+    }
+
+    #formNhap, #text {
+        margin: auto;
+    }
+
+    #formNhap {
+        width: 80%;
+    }
+}
