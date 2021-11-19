@@ -66,7 +66,7 @@ if ($tenGV != null && count($tenGV) > 0) {
     <?php
 
     if (isset($_GET['s']) && $_GET['s'] != '') {
-        $sql = 'select *
+        $sql = 'select d.maBD, d.maSV, sv.tenSV, d.maMH, d.diemCC, d.diemGK, d.diemCK, dtk.diemTK
         from diem d
         join monhoc_giaovien mh_gv on d.maMH = mh_gv.maMH
         join sinhvien sv on d.maSV = sv.maSV
@@ -74,7 +74,7 @@ if ($tenGV != null && count($tenGV) > 0) {
         where d.maSV like "%'.$_GET['s'].'%" and mh_gv.maGV like "%'.$_SESSION['u'].'%"
         order by d.maMH, d.maSV';
     } else {
-        $sql = 'select *
+        $sql = 'select d.maBD, d.maSV, sv.tenSV, d.maMH, d.diemCC, d.diemGK, d.diemCK, dtk.diemTK
         from diem d
         join monhoc_giaovien mh_gv on d.maMH = mh_gv.maMH
         join sinhvien sv on d.maSV = sv.maSV

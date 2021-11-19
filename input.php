@@ -19,7 +19,10 @@ if (isset($_GET['id'])) {
 	$s_maSV          = $_GET['id'];
     $s_maMH         = $_GET['maMon'];
 	// $sql         = 'SELECT * FROM diem WHERE maSV = '.$s_maSV;
-    $sql = "SELECT * FROM diem JOIN diemtongket on diem.maBD = diemtongket.maBD WHERE maSV = '$s_maSV' and maMH = '$s_maMH'";
+    $sql = "SELECT d.maBD, d.maSV, d.maMH, d.diemCC, d.diemGK, d.diemCK
+            FROM diem d
+            JOIN diemtongket dtk on d.maBD = dtk.maBD 
+            WHERE maSV = '$s_maSV' and maMH = '$s_maMH'";
 	$studentList = executeResult($sql);
 	if ($studentList != null && count($studentList) > 0) {
 		$std        = $studentList[0];

@@ -7,7 +7,7 @@ $u = $_POST['username'];
 $_SESSION['u'] = $_POST['username'];
 $p = md5($_POST['password']);
 
-$sql = "select * from taikhoan where username='$u' and password='$p'";
+$sql = "select role from taikhoan where username='$u' and password='$p'";
 
 $account = executeResult($sql);
 	if ($account != null && count($account) > 0) {

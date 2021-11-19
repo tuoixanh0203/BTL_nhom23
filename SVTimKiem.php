@@ -4,7 +4,7 @@ session_start();
 $name = '';
 $code = '';
 require_once("dbhelp.php");
-$sql = 'SELECT * FROM sinhvien WHERE maSV like "%'.$_SESSION['u'].'%"';
+$sql = 'SELECT tenSV, maSV FROM sinhvien WHERE maSV like "%'.$_SESSION['u'].'%"';
 $tenSV = executeResult($sql);
 if ($tenSV != null && count($tenSV) > 0) {
     $nameSV        = $tenSV[0];
@@ -70,14 +70,14 @@ if ($tenSV != null && count($tenSV) > 0) {
     <?php
 
     if (isset($_GET['s']) && $_GET['s'] != '') {
-        $sql = 'SELECT * 
+        $sql = 'SELECT mh.tenMH, mh.maMH, d.diemCC, d.diemGK, d.diemCK, dtk.diemTK
                 FROM diem d join sinhvien sv on d.maSV = sv.maSV 
                 join monhoc mh on d.maMH = mh.maMH
                 join diemtongket dtk on dtk.maBD = d.maBD
                 WHERE d.maMH like "%'.$_GET['s'].'%" and d.maSV like "%'.$_SESSION['u'].'%"
                 ORDER BY d.maSV';
     } else {
-        $sql = 'SELECT * 
+        $sql = 'SELECT mh.tenMH, mh.maMH, d.diemCC, d.diemGK, d.diemCK, dtk.diemTK
                 FROM diem d join sinhvien sv on d.maSV = sv.maSV 
                 join monhoc mh on d.maMH = mh.maMH
                 join diemtongket dtk on dtk.maBD = d.maBD
