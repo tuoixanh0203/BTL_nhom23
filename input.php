@@ -1,13 +1,25 @@
 <?php
+session_start();
 require_once ('dbhelp.php');
-$s_maBD = $s_maSV = $s_maMH = $s_diemCC = $s_diemGK = $s_diemCK = $s_diemTK = '';
+$maGV = $_SESSION['u'];
+
+$sql = 'SELECT maMH FROM monhoc_giaovien WHERE maGV like "%'.$_SESSION['u'].'%"';
+
+$list = executeResult($sql);
+$listMH = [];
+
+foreach($list as $item){
+    $listMH[] = $item['maMH'];
+}
+
+$s_maBD = $s_maSV = $s_maMH = $s_diemCC = $s_diemGK = $s_diemCK = '';
 
 $s_maSV = '';
 if (isset($_GET['id'])) {
 	$s_maSV          = $_GET['id'];
     $s_maMH         = $_GET['maMon'];
 	// $sql         = 'SELECT * FROM diem WHERE maSV = '.$s_maSV;
-    $sql = "SELECT * FROM diem WHERE maSV = '$s_maSV' and maMH = '$s_maMH'";
+    $sql = "SELECT * FROM diem JOIN diemtongket on diem.maBD = diemtongket.maBD WHERE maSV = '$s_maSV' and maMH = '$s_maMH'";
 	$studentList = executeResult($sql);
 	if ($studentList != null && count($studentList) > 0) {
 		$std        = $studentList[0];
@@ -17,11 +29,12 @@ if (isset($_GET['id'])) {
 		$s_diemCC  = $std['diemCC'];
         $s_diemGK  = $std['diemGK'];
 		$s_diemCK  = $std['diemCK'];
-        $s_diemTK  = $std['diemTK'];
+        // $s_diemTK  = $std['diemTK'];
 	} else {
 		$s_maSV = '';
 	}
 }
+
 
 if(!empty($_POST)) {
     if (isset($_POST['maBD'])) {
@@ -48,23 +61,25 @@ if(!empty($_POST)) {
         $s_diemCK = $_POST['diemCK'];
     }
 
-    if(isset($_POST['diemTK'])) {
-        $s_diemTK = $_POST['diemTK'];
-    }
+    // if(isset($_POST['diemTK'])) {
+    //     $s_diemTK = $_POST['diemTK'];
+    // }
 
     $s_maSV = str_replace('\'', '\\\'', $s_maSV);
     $s_maMH = str_replace('\'', '\\\'', $s_maMH);
     $s_diemCC = str_replace('\'', '\\\'', $s_diemCC);
     $s_diemGK = str_replace('\'', '\\\'', $s_diemGK);
     $s_diemCK = str_replace('\'', '\\\'', $s_diemCK);
-    $s_diemTK = str_replace('\'', '\\\'', $s_diemTK);
+    // $s_diemTK = str_replace('\'', '\\\'', $s_diemTK);
 
     if ($s_maBD != '') {
 		//update
-        $sql = "update diem set maSV = '$s_maSV', maMH = '$s_maMH', diemCC = '$s_diemCC', diemGK = '$s_diemGK', diemCK = '$s_diemCK', diemTK = '$s_diemTK' where maSV= '$s_maSV' and maMH = '$s_maMH'";
+        $sql = "update diem set maSV = '$s_maSV', maMH = '$s_maMH', diemCC = '$s_diemCC', diemGK = '$s_diemGK', diemCK = '$s_diemCK' where maSV= '$s_maSV' and maMH = '$s_maMH'";
 	} else {
 		//insert
-        $sql = "INSERT INTO diem(maSV, maMH, diemCC, diemGK, diemCK, diemTK) VALUES ('$s_maSV','$s_maMH','$s_diemCC','$s_diemGK','$s_diemCK','$s_diemTK')";
+        if (in_array("$s_maMH", $listMH)) {
+            $sql = "INSERT INTO diem(maSV, maMH, diemCC, diemGK, diemCK, maGV) VALUES ('$s_maSV','$s_maMH','$s_diemCC','$s_diemGK','$s_diemCK', '$maGV')";
+        }
 	}
     // var_dump($s_maBD);
     // echo $sql;
@@ -75,7 +90,7 @@ if(!empty($_POST)) {
 	die();
 }
 
-
+// Huyen and Tuoi :))
 
 ?>
 
@@ -128,7 +143,7 @@ if(!empty($_POST)) {
                         <label for="diemCK">Điểm cuối kì:</label>
                         <input required="true" type="text" class="form-control" id="diemCK" name="diemCK" value="<?=$s_diemCK?>">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="display: none;">
                         <label for="diemTK">Điểm tổng kết:</label>
                         <input required="true" type="text" class="form-control" id="diemTK" name="diemTK" value="<?=$s_diemTK?>">
                     </div>

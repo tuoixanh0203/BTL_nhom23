@@ -1,8 +1,11 @@
 <?php
+session_start();
 require_once ('dbhelp.php');
+$u = $p = '';
 
 $u = $_POST['username'];
-$p = $_POST['password'];
+$_SESSION['u'] = $_POST['username'];
+$p = md5($_POST['password']);
 
 $sql = "select * from taikhoan where username='$u' and password='$p'";
 

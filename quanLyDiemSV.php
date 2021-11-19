@@ -1,5 +1,14 @@
 <?php
+session_start();
+// echo $_SESSION['u'];
 require_once("dbhelp.php");
+$sql = 'SELECT tenGV FROM giangvien WHERE maGV like "%'.$_SESSION['u'].'%"';
+$tenGV = executeResult($sql);
+if ($tenGV != null && count($tenGV) > 0) {
+    $nameGV        = $tenGV[0];
+    $name = $nameGV['tenGV'];
+}
+// echo $name;
 ?>
 
 <!DOCTYPE html>
@@ -32,11 +41,18 @@ require_once("dbhelp.php");
 				</form>
             </div>
             <div class="panel-body">
+                  <label for="tenGV">Giảng viên:</label>
+                  <?php
+                    echo $name;
+                  ?>
+                  <br>
                   <button class="btn btn-success" onclick="window.open('input.php', '_self')">Add</button>
+                  <button class="btn btn-logout btn-danger" onclick="window.open('index.php', '_self')">Log out</button>
                   <table class="table table-bordered">
                       <thead>
                           <tr>
-                            <th>Mã sinh viên</th>
+                              <th>Mã sinh viên</th>
+                              <th>Họ tên</th>
                               <th>Mã môn học</th>
                               <th>Điểm chuyên cần</th>
                               <th>Điểm giữa kì</th>
@@ -48,27 +64,38 @@ require_once("dbhelp.php");
                       </thead>
                       <tbody>
     <?php
-    // $sql = "select * from diem";
 
     if (isset($_GET['s']) && $_GET['s'] != '') {
-        $sql = 'select * from diem where maSV like "%'.$_GET['s'].'%" order by maSV, maMH';
+        $sql = 'select *
+        from diem d
+        join monhoc_giaovien mh_gv on d.maMH = mh_gv.maMH
+        join sinhvien sv on d.maSV = sv.maSV
+        join diemtongket dtk on dtk.maBD = d.maBD
+        where d.maSV like "%'.$_GET['s'].'%" and mh_gv.maGV like "%'.$_SESSION['u'].'%"
+        order by d.maMH, d.maSV';
     } else {
-        $sql = 'select * from diem order by maSV, maMH';
+        $sql = 'select *
+        from diem d
+        join monhoc_giaovien mh_gv on d.maMH = mh_gv.maMH
+        join sinhvien sv on d.maSV = sv.maSV
+        join diemtongket dtk on dtk.maBD = d.maBD
+        where mh_gv.maGV like "%'.$_SESSION['u'].'%"
+        order by d.maMH, d.maSV';
     }
-    // SELECT * FROM diem ORDER BY maSV, maMH
 
     $studentList = executeResult($sql);
 
     foreach($studentList as $std) {
         echo '<tr>
             <td>'.$std["maSV"].'</td>
+            <td>'.$std["tenSV"].'</td>
             <td>'.$std["maMH"].'</td>
             <td>'.$std["diemCC"].'</td>
             <td>'.$std["diemGK"].'</td>
             <td>'.$std["diemCK"].'</td>
             <td>'.$std["diemTK"].'</td>
             <td><button class="btn btn-warning" onclick=\'window.open("input.php?id='.$std['maSV'].'&maMon='.$std['maMH'].'","_self")\'>Edit</button></td>
-            <td><button class="btn btn-danger" onclick="deleteStudent('.$std['maSV'].')">Delete</button></td>
+            <td><button class="btn btn-danger" onclick="deleteStudent('.$std['maBD'].')">Delete</button></td>
         </tr>';
     }
     ?>
@@ -78,20 +105,21 @@ require_once("dbhelp.php");
         </div>
     </div>
     <script type="text/javascript">
-		function deleteStudent(maSV) {
+		function deleteStudent(maBD) {
 			option = confirm('Bạn có chắc muốn xoá điểm của sinh viên này không?')
 			if(!option) {
 				return;
 			}
 
-			console.log(maSV);
+			console.log(maBD);
 			$.post('delete_student.php', {
-				'maSV': maSV
+				'maBD': maBD
 			}, function(data) {
 				// alert(data)
-				location.reload()
+				location.reload();
 			})
 		}
 	</script>
 </body>
 </html>
+
